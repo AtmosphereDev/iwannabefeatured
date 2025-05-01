@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I Wanna Be Featured!</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/7f33576369.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <main>
+      <!-- Upload Section -->
+      <section v-if="!filedata" class="hero is-fullheight">
+        <div class="hero-body columns is-centered">
+          <div class="file is-boxed">
+            <label class="file-label">
+              <input
+                id="file"
+                class="file-input"
+                type="file"
+                name="resume"
+                @change="parseServers"
+              />
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">Choose a file</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Editor Section -->
+      <section v-if="filedata" class="hero is-fullheight">
+        <!-- Mobile Menu Section -->
+        <div class="mobilemenu is-hidden-desktop ml-1 mt-1 p-1">
+          <button @click="switchVisibility">
+            <span class="icon">
+              <i class="fas fa-bars"></i>
+            </span>
+          </button>
+        </div>
+
+        <div class="hero-body columns is-centered">
+          <div id="servers" class="column is-one-quarter">
+            <aside class="menu">
+              <ul class="menu-list">
+                <li v-for="(server, index) in filedata.responseJson.data.Items">
+                  <button class="button" @click="selectServer(index)">
+                    <div class="media" style="align-items: center">
+                      <div class="media-left">
+                        <figure class="image is-48x48">
+                          <img
+                            v-bind:src="getIconUrl(server.Images)"
+                            style="width: 100%; height: 100%; object-fit: cover"
+                          />
+                        </figure>
+                      </div>
+                      <div class="media-content is-clipped">
+                        <p class="title is-6 mb-0">
+                          {{ server.Title.neutral }}
+                        </p>
+                        <p class="subtitle is-7 mt-0">
+                          {{ server.Description.neutral }}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                </li>
+                <li>
+                  <button @click="addServer" class="button">
+                    <span class="icon"><i class="fas fa-add"></i></span>
+                    <span class="title is-6 mb-0">Add server</span>
+                  </button>
+                </li>
+                <li>
+                  <button @click="downloadFile" class="button is-info">
+                    <span class="icon"><i class="fas fa-save"></i></span>
+                    <span class="title is-6 mb-0">SAVE</span>
+                  </button>
+                </li>
+                <li>
+                  <button @click="copyWindows" class="button is-info">
+                    <span class="icon"
+                      ><i class="fa-brands fa-windows"></i
+                    ></span>
+                    <span class="title is-6 mb-0">Copy path</span>
+                  </button>
+                </li>
+                <li>
+                  <button @click="copyMac" class="button is-info">
+                    <span class="icon"><i class="fa-brands fa-apple"></i></span>
+                    <span class="title is-6 mb-0">Copy path</span>
+                  </button>
+                </li>
+              </ul>
+            </aside>
+          </div>
+          <div id="editor" class="column is-hidden-touch">
+            <div class="is-boxed">
+              <input
+                class="block input"
+                type="text"
+                placeholder="Title"
+                v-model="title"
+              />
+              <input
+                class="block input"
+                type="text"
+                placeholder="Description"
+                v-model="description"
+              />
+              <input
+                class="block input"
+                type="text"
+                placeholder="IP-Address"
+                v-model="ipAddress"
+              />
+              <input
+                class="block input"
+                type="number"
+                min="1"
+                max="65535"
+                placeholder="Port"
+                v-model="port"
+              />
+              <input
+                class="block input"
+                type="text"
+                placeholder="News title"
+                v-model="newsTitle"
+              />
+              <input
+                class="block input"
+                type="text"
+                placeholder="News"
+                v-model="news"
+              />
+              <input
+                class="block input"
+                type="text"
+                placeholder="Icon URL"
+                v-model="filedata.responseJson.data.Items[selected].Images[iconIndex].Url"
+              />
+              <input
+                class="block input"
+                type="text"
+                placeholder="Banner URL"
+                v-model="filedata.responseJson.data.Items[selected].Images[bannerIndex].Url"
+              />
+              <div
+                class="is-boxed is-flex is-justify-content-space-between is-align-items-center"
+              >
+                <button
+                  class="button is-danger"
+                  @click="deleteServer(selected)"
+                >
+                  DELETE
+                </button>
+                <button class="button is-success" @click="saveServer(selected)">
+                  SAVE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>IWannaBeFeatured</strong> by
+            <a href="https://github.com/AtmosphereDev">Atmosphere</a>. Built
+            with ❤️ using <a href="https://bulma.io/">Bulma</a> &
+            <a href="https://vuejs.org/">Vue.js</a>
+          </p>
+        </div>
+      </footer>
+    </main>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            filedata: null,
+            filename: "",
+            selected: 0,
+            iconIndex: 0,
+            bannerIndex: 0,
+            title: "Template title",
+            description: "Template description",
+            ipAddress: "example.com",
+            port: 19132,
+            newsTitle: "No news",
+            news: ":3",
+          };
+        },
+        methods: {
+          async parseServers(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+              const text = await file.text();
+
+              this.filedata = JSON.parse(text);
+              this.filename = file.name;
+              this.selectServer(0);
+            } catch (error) {
+              console.error(error);
+              alert("Invalid JSON file.");
+            }
+          },
+          copyWindows() {
+            const windows = "%LocalAppData%\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\LocalCache\\minecraftpe\\ContentCache\\ThirdPartyServer";
+
+            navigator.clipboard.writeText(windows).then(
+              function () {
+                console.log("Async: Copying to clipboard was successful!");
+              },
+              function (err) {
+                console.error("Async: Could not copy text: ", err);
+              }
+            );
+          },
+          copyMac() {
+            const macos = "~/Library/Application Support/mcpelauncher/minecraftpe/ContentCache/ThirdPartyServer";
+
+            navigator.clipboard.writeText(macos).then(
+              function () {
+                console.log("Async: Copying to clipboard was successful!");
+              },
+              function (err) {
+                console.error("Async: Could not copy text: ", err);
+              }
+            );
+          },
+          switchVisibility() {
+            if (
+              document
+                .getElementById("servers")
+                .classList.contains("is-hidden-touch")
+            ) {
+              document
+                .getElementById("servers")
+                .classList.remove("is-hidden-touch");
+              document
+                .getElementById("servers")
+                .classList.remove("is-one-quarter");
+              document
+                .getElementById("editor")
+                .classList.add("is-hidden-touch");
+            } else {
+              document
+                .getElementById("editor")
+                .classList.remove("is-hidden-touch");
+              document
+                .getElementById("servers")
+                .classList.add("is-hidden-touch");
+            }
+          },
+          getIndexOfArray(srcArray, tag) {
+            if (Array.isArray(srcArray)) {
+              const index = srcArray.findIndex((img) => img.Tag === tag);
+              return index != -1 ? index : 0;
+            }
+            return 0;
+          },
+          getIconUrl(srcArray) {
+            const index = this.getIndexOfArray(srcArray, "Icon");
+            return srcArray.at(index).Url;
+          },
+          getBannerUrl(srcArray) {
+            const index = this.getIndexOfArray(srcArray, "Banner");
+            return srcArray.at(index).Url;
+          },
+          addServer() {
+            const template = {"AlternateIds":[],"ContentType":"3PP_V2.0","Contents":[],"CreationDate":"2024-02-05T18:10:04.576Z","CreatorEntity":{"Id":"0","Type":"master_player_account","TypeString":"master_player_account"},"CreatorEntityKey":{"Id":"0","Type":"master_player_account","TypeString":"master_player_account"},"DeepLinks":[],"Description":{"NEUTRAL":"Template description","en-US":"Template description","neutral":"Template description"},"DisplayProperties":{"allowListUrl":"*.example.com","availableGames":[],"creatorName":"IWannaBeFeatured","experienceId":"","maxClientVersion":"9.99.9","minClientVersion":"1.16.0","news":"News template","newsTitle":"Vanilla","originalCreatorId":"0","port":19132,"requireXBL":"True","storePageId":"ServerPage_master_player_account!0","url":"example.com","whitelistUrl":"*.example.com"},"Id":"e218a7fa-fdf2-4910-8634-a8482f77c09a","Images":[{"Id":"6d76b8c2-b102-4833-9b12-af15a1435734","Tag":"Icon","Type":"Screenshot","Url":"https://raw.githubusercontent.com/AtmosphereDev/iwannabefeatured/refs/assets/icon.png"},{"Id":"be03ce91-bc41-46f3-972a-29168b6cf859","Tag":"Banner","Type":"Screenshot","Url":"https://raw.githubusercontent.com/AtmosphereDev/iwannabefeatured/refs/assets/banner.png"}],"IsStackable":false,"ItemReferences":[],"Keywords":{"NEUTRAL":{"Values":[]},"en-US":{"Values":[]},"neutral":{"Values":[]}},"LastModifiedDate":"2025-02-21T20:07:30.72Z","Platforms":["android.amazonappstore","android.googleplay","ios.store","nx.store","oculus.store.rift","oculus.store.gearvr","b.store","uwp.store","win10.onestore","uwp.store.mobile","xboxone.store","title.bedrockvanilla","title.earth","title.sunderland","java"],"SourceEntity":{"Id":"B63A0803D3653643","Type":"namespace","TypeString":"namespace"},"SourceEntityKey":{"Id":"B63A0803D3653643","Type":"namespace","TypeString":"namespace"},"Tags":["e13f1666-6f6c-417d-b262-6083546ed2a1"],"Title":{"NEUTRAL":"Template title","en-US":"Template title","neutral":"Template title"},"Type":"catalogItem"}
+            template.Id = crypto.randomUUID();
+            template.Images[0].Id = crypto.randomUUID();
+            template.Images[1].Id = crypto.randomUUID();
+            this.filedata.responseJson.data.Items.push(template);
+
+            this.selectServer(this.filedata.responseJson.data.Items.length - 1);
+          },
+          selectServer(index) {
+            this.selected = index;
+            this.iconIndex = this.getIndexOfArray(this.filedata.responseJson.data.Items[index].Images, "Icon");
+            this.bannerIndex = this.getIndexOfArray(this.filedata.responseJson.data.Items[index].Images, "Banner");
+            this.title = this.filedata.responseJson.data.Items[index].Title.neutral;
+            this.description = this.filedata.responseJson.data.Items[index].Description.neutral;
+            this.ipAddress = this.filedata.responseJson.data.Items[index].DisplayProperties.url;
+            this.port = this.filedata.responseJson.data.Items[index].DisplayProperties.port;
+            this.newsTitle = this.filedata.responseJson.data.Items[index].DisplayProperties.newsTitle;
+            this.news = this.filedata.responseJson.data.Items[index].DisplayProperties.news;
+          },
+          deleteServer(index) {
+            if (this.filedata.responseJson.data.Items.length <= 1) {
+              alert("Cannot delete last server!");
+              return;
+            }
+            this.filedata.responseJson.data.Items.splice(index, 1);
+            this.selectServer(index == 0 ? 0 : index-1);
+          },
+          saveServer(index) {
+            ["NEUTRAL", "en-US", "neutral"].forEach((lang) => {
+              this.filedata.responseJson.data.Items[index].Title[lang] = this.title;
+              this.filedata.responseJson.data.Items[index].Description[lang] = this.description;
+            });
+
+            this.filedata.responseJson.data.Items[index].DisplayProperties.url = this.ipAddress;
+            this.filedata.responseJson.data.Items[index].DisplayProperties.port = this.port;
+
+            this.filedata.responseJson.data.Items[index].DisplayProperties.newsTitle = this.newsTitle;
+            this.filedata.responseJson.data.Items[index].DisplayProperties.news = this.news;
+          },
+          downloadFile() {
+            if (!this.filedata) return;
+            const blob = new Blob([JSON.stringify(this.filedata, null, 2)], {
+              type: "application/json",
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = this.filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+          },
+        },
+      }).mount("main");
+    </script>
+  </body>
+</html>
