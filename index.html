@@ -18,22 +18,42 @@
       <!-- Upload Section -->
       <section v-if="!filedata" class="hero is-fullheight">
         <div class="hero-body columns is-centered">
-          <div class="file is-boxed">
-            <label class="file-label">
-              <input
-                id="file"
-                class="file-input"
-                type="file"
-                name="resume"
-                @change="parseServers"
-              />
-              <span class="file-cta">
-                <span class="file-icon">
-                  <i class="fas fa-upload"></i>
+          <div class="column is-narrow">
+            <div class="file is-boxed is-centered">
+              <label class="file-label">
+                <input
+                  id="file"
+                  class="file-input"
+                  type="file"
+                  name="resume"
+                  @change="parseServers"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">Choose a file</span>
                 </span>
-                <span class="file-label">Choose a file</span>
-              </span>
-            </label>
+              </label>
+            </div>
+
+            <div class="content has-text-centered mt-4">
+              <p>You need file with similar name <strong>cF8xODU2NDAzNjg2</strong></p>
+              <div class="columns">
+                <div class="column">
+                  <button @click="copyWindows" class="button">
+                    <span class="icon"><i class="fa-brands fa-windows"></i></span>
+                    <span>Windows path</span>
+                  </button>
+                </div>
+                <div class="column">
+                  <button @click="copyMac" class="button">
+                    <span class="icon"><i class="fa-brands fa-apple"></i></span>
+                    <span>MacOS path</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -92,13 +112,13 @@
                     <span class="icon"
                       ><i class="fa-brands fa-windows"></i
                     ></span>
-                    <span class="title is-6 mb-0">Copy path</span>
+                    <span class="title is-6 mb-0">Windows path</span>
                   </button>
                 </li>
                 <li>
                   <button @click="copyMac" class="button is-info">
                     <span class="icon"><i class="fa-brands fa-apple"></i></span>
-                    <span class="title is-6 mb-0">Copy path</span>
+                    <span class="title is-6 mb-0">MacOS path</span>
                   </button>
                 </li>
               </ul>
@@ -284,7 +304,101 @@
             return srcArray.at(index).Url;
           },
           addServer() {
-            const template = {"AlternateIds":[],"ContentType":"3PP_V2.0","Contents":[],"CreationDate":"2024-02-05T18:10:04.576Z","CreatorEntity":{"Id":"0","Type":"master_player_account","TypeString":"master_player_account"},"CreatorEntityKey":{"Id":"0","Type":"master_player_account","TypeString":"master_player_account"},"DeepLinks":[],"Description":{"NEUTRAL":"Template description","en-US":"Template description","neutral":"Template description"},"DisplayProperties":{"allowListUrl":"*.example.com","availableGames":[],"creatorName":"IWannaBeFeatured","experienceId":"","maxClientVersion":"9.99.9","minClientVersion":"1.16.0","news":"News template","newsTitle":"Vanilla","originalCreatorId":"0","port":19132,"requireXBL":"True","storePageId":"ServerPage_master_player_account!0","url":"example.com","whitelistUrl":"*.example.com"},"Id":"e218a7fa-fdf2-4910-8634-a8482f77c09a","Images":[{"Id":"6d76b8c2-b102-4833-9b12-af15a1435734","Tag":"Icon","Type":"Screenshot","Url":"https://raw.githubusercontent.com/AtmosphereDev/iwannabefeatured/refs/heads/main/assets/icon.png"},{"Id":"be03ce91-bc41-46f3-972a-29168b6cf859","Tag":"Banner","Type":"Screenshot","Url":"https://raw.githubusercontent.com/AtmosphereDev/iwannabefeatured/refs/heads/main/assets/banner.png"}],"IsStackable":false,"ItemReferences":[],"Keywords":{"NEUTRAL":{"Values":[]},"en-US":{"Values":[]},"neutral":{"Values":[]}},"LastModifiedDate":"2025-02-21T20:07:30.72Z","Platforms":["android.amazonappstore","android.googleplay","ios.store","nx.store","oculus.store.rift","oculus.store.gearvr","b.store","uwp.store","win10.onestore","uwp.store.mobile","xboxone.store","title.bedrockvanilla","title.earth","title.sunderland","java"],"SourceEntity":{"Id":"B63A0803D3653643","Type":"namespace","TypeString":"namespace"},"SourceEntityKey":{"Id":"B63A0803D3653643","Type":"namespace","TypeString":"namespace"},"Tags":["e13f1666-6f6c-417d-b262-6083546ed2a1"],"Title":{"NEUTRAL":"Template title","en-US":"Template title","neutral":"Template title"},"Type":"catalogItem"}
+            const template = {
+              AlternateIds: [],
+              ContentType: "3PP_V2.0",
+              Contents: [],
+              CreationDate: "2024-02-05T18:10:04.576Z",
+              CreatorEntity: {
+                Id: "0",
+                Type: "master_player_account",
+                TypeString: "master_player_account",
+              },
+              CreatorEntityKey: {
+                Id: "0",
+                Type: "master_player_account",
+                TypeString: "master_player_account",
+              },
+              DeepLinks: [],
+              Description: {
+                NEUTRAL: "Template description",
+                "en-US": "Template description",
+                neutral: "Template description",
+              },
+              DisplayProperties: {
+                allowListUrl: "*.example.com",
+                availableGames: [],
+                creatorName: "IWannaBeFeatured",
+                experienceId: "",
+                maxClientVersion: "9.99.9",
+                minClientVersion: "1.16.0",
+                news: "News template",
+                newsTitle: "Vanilla",
+                originalCreatorId: "0",
+                port: 19132,
+                requireXBL: "True",
+                storePageId: "ServerPage_master_player_account!0",
+                url: "example.com",
+                whitelistUrl: "*.example.com",
+              },
+              Id: "e218a7fa-fdf2-4910-8634-a8482f77c09a",
+              Images: [
+                {
+                  Id: "6d76b8c2-b102-4833-9b12-af15a1435734",
+                  Tag: "Icon",
+                  Type: "Screenshot",
+                  Url: "https://raw.githubusercontent.com/AtmosphereDev/iwannabefeatured/refs/heads/main/assets/icon.png",
+                },
+                {
+                  Id: "be03ce91-bc41-46f3-972a-29168b6cf859",
+                  Tag: "Banner",
+                  Type: "Screenshot",
+                  Url: "https://raw.githubusercontent.com/AtmosphereDev/iwannabefeatured/refs/heads/main/assets/banner.png",
+                },
+              ],
+              IsStackable: false,
+              ItemReferences: [],
+              Keywords: {
+                NEUTRAL: { Values: [] },
+                "en-US": { Values: [] },
+                neutral: { Values: [] },
+              },
+              LastModifiedDate: "2025-02-21T20:07:30.72Z",
+              Platforms: [
+                "android.amazonappstore",
+                "android.googleplay",
+                "ios.store",
+                "nx.store",
+                "oculus.store.rift",
+                "oculus.store.gearvr",
+                "b.store",
+                "uwp.store",
+                "win10.onestore",
+                "uwp.store.mobile",
+                "xboxone.store",
+                "title.bedrockvanilla",
+                "title.earth",
+                "title.sunderland",
+                "java",
+              ],
+              SourceEntity: {
+                Id: "B63A0803D3653643",
+                Type: "namespace",
+                TypeString: "namespace",
+              },
+              SourceEntityKey: {
+                Id: "B63A0803D3653643",
+                Type: "namespace",
+                TypeString: "namespace",
+              },
+              Tags: ["e13f1666-6f6c-417d-b262-6083546ed2a1"],
+              Title: {
+                NEUTRAL: "Template title",
+                "en-US": "Template title",
+                neutral: "Template title",
+              },
+              Type: "catalogItem",
+            };
             template.Id = crypto.randomUUID();
             template.Images[0].Id = crypto.randomUUID();
             template.Images[1].Id = crypto.randomUUID();
@@ -294,8 +408,14 @@
           },
           selectServer(index) {
             this.selected = index;
-            this.iconIndex = this.getIndexOfArray(this.filedata.responseJson.data.Items[index].Images, "Icon");
-            this.bannerIndex = this.getIndexOfArray(this.filedata.responseJson.data.Items[index].Images, "Banner");
+            this.iconIndex = this.getIndexOfArray(
+              this.filedata.responseJson.data.Items[index].Images,
+              "Icon"
+            );
+            this.bannerIndex = this.getIndexOfArray(
+              this.filedata.responseJson.data.Items[index].Images,
+              "Banner"
+            );
             this.title = this.filedata.responseJson.data.Items[index].Title.neutral;
             this.description = this.filedata.responseJson.data.Items[index].Description.neutral;
             this.ipAddress = this.filedata.responseJson.data.Items[index].DisplayProperties.url;
@@ -309,7 +429,7 @@
               return;
             }
             this.filedata.responseJson.data.Items.splice(index, 1);
-            this.selectServer(index == 0 ? 0 : index-1);
+            this.selectServer(index == 0 ? 0 : index - 1);
           },
           saveServer(index) {
             ["NEUTRAL", "en-US", "neutral"].forEach((lang) => {
@@ -326,7 +446,7 @@
           downloadFile() {
             if (!this.filedata) return;
             const blob = new Blob([JSON.stringify(this.filedata, null, 2)], {
-              type: "application/json",
+              type: "application/octet-stream",
             });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
