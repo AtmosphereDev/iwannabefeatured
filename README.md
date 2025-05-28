@@ -1,7 +1,16 @@
-# I Wanna Be Featured
-
+# 🌟 I Wanna Be Featured
 Make your server featured and look better!
 
+![image](https://github.com/user-attachments/assets/0ecfd623-133f-4b49-96d2-059ca287e727)
+
+# Usage
+1. Copy path for your OS and choose file that often starts with `cF`
+2. Edit featured servers !DON'T EDIT MINEPLEX, IT DOESN'T SHOW!
+3. Download new file and replace old file with new one
+
+<details>
+<summary>Click me</summary>
+  
 # How resource hash name works?
 It's appends `height` and `width` params to the resource url and hash with `SHA1`
 
@@ -31,3 +40,4 @@ Result
 ```
 7fc608062e09fcbddb044a5d90b843ac2424ca4a
 ```
+</details>
